@@ -1,0 +1,43 @@
+import "dotenv/config";
+import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
+import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
+import * as listWorkspaces from "./tools/listWorkspaces.js";
+import * as listTargets from "./tools/listTargets.js";
+import * as resolveTarget from "./tools/resolveTarget.js";
+import * as search from "./tools/search.js";
+import * as queryDataSource from "./tools/queryDataSource.js";
+import * as queryDatabase from "./tools/queryDatabase.js";
+import * as createSimpleTask from "./tools/createSimpleTask.js";
+import * as upsertPageInTarget from "./tools/upsertPageInTarget.js";
+import * as getPage from "./tools/getPage.js";
+import * as manageTargets from "./tools/manageTargets.js";
+import * as appendBlocks from "./tools/appendBlocks.js";
+import * as getDatabase from "./tools/getDatabase.js";
+import * as listUsers from "./tools/listUsers.js";
+import * as comments from "./tools/comments.js";
+import * as blockOperations from "./tools/blockOperations.js";
+import * as databaseOperations from "./tools/databaseOperations.js";
+import * as pageOperations from "./tools/pageOperations.js";
+
+const server = new McpServer({ name: "notion-mcp-custom", version: "1.0.0" });
+
+listWorkspaces.register(server);
+listTargets.register(server);
+resolveTarget.register(server);
+search.register(server);
+queryDataSource.register(server);
+queryDatabase.register(server);
+createSimpleTask.register(server);
+upsertPageInTarget.register(server);
+getPage.register(server);
+manageTargets.register(server);
+appendBlocks.register(server);
+getDatabase.register(server);
+listUsers.register(server);
+comments.register(server);
+blockOperations.register(server);
+databaseOperations.register(server);
+pageOperations.register(server);
+
+const transport = new StdioServerTransport();
+await server.connect(transport);
