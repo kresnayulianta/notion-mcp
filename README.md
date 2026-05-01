@@ -144,6 +144,53 @@ MCP_API_KEY=your-secret         # Optional: lock server with API key
 MCP_HTTP_PORT=3000              # HTTP server port (default: 3000)
 ```
 
+## How to Use
+
+Once connected to Claude Desktop or any MCP-compatible client, you can interact with your Notion workspace using natural language.
+
+### Pages
+
+```
+"Create a task called 'Review proposal' due Friday, priority High"
+"Show me the content of page <page-id>"
+"Update the status of page <page-id> to Done"
+"Move page <page-id> to the Projects database"
+```
+
+### Databases
+
+```
+"Query my tasks database and show overdue items"
+"Get the schema of database <database-id>"
+"Search my Notion for anything about 'quarterly review'"
+```
+
+### Blocks & Comments
+
+```
+"Append a bullet list to page <page-id> with these three items: ..."
+"Show all comments on page <page-id>"
+"Add a comment to page <page-id>: 'Needs review by Monday'"
+```
+
+### Multi-workspace
+
+```
+"List all configured workspaces"
+"Switch to the 'work' workspace and query the roadmap database"
+"List targets in my personal workspace"
+```
+
+### Tip: Named Targets
+
+Register your frequently-used databases as named targets so you can refer to them by name instead of UUID:
+
+```
+"Add a target called 'tasks' pointing to database <database-id>"
+"Query my 'tasks' target where status is not Done"
+"Create a task in the 'tasks' target called 'Fix login bug'"
+```
+
 ## Notion Integration Setup
 
 1. Go to [notion.so/my-integrations](https://www.notion.so/my-integrations)
