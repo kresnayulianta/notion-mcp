@@ -54,13 +54,35 @@ A custom [Model Context Protocol (MCP)](https://modelcontextprotocol.io) server 
 
 ## Usage
 
-### npx — stdio mode (Claude Desktop, Cursor, etc.)
+### npx — stdio mode
 
 ```bash
 npx -y @kresnayulianta/notion-mcp <your-notion-token>
 ```
 
-**Claude Desktop** (`~/Library/Application Support/Claude/claude_desktop_config.json`):
+## Usage with Claude
+
+### Claude Desktop
+
+**macOS**: `~/Library/Application Support/Claude/claude_desktop_config.json`  
+**Windows**: `%APPDATA%\Claude\claude_desktop_config.json`
+
+```json
+{
+  "mcpServers": {
+    "notion": {
+      "command": "npx",
+      "args": ["-y", "@kresnayulianta/notion-mcp"],
+      "env": {
+        "NOTION_ADHOC_TOKEN": "ntn_yourtoken"
+      }
+    }
+  }
+}
+```
+
+Or pass the token directly as an argument:
+
 ```json
 {
   "mcpServers": {
@@ -70,6 +92,30 @@ npx -y @kresnayulianta/notion-mcp <your-notion-token>
     }
   }
 }
+```
+
+### Cursor
+
+Add to `~/.cursor/mcp.json` (global) or `.cursor/mcp.json` (per project):
+
+```json
+{
+  "mcpServers": {
+    "notion": {
+      "command": "npx",
+      "args": ["-y", "@kresnayulianta/notion-mcp"],
+      "env": {
+        "NOTION_ADHOC_TOKEN": "ntn_yourtoken"
+      }
+    }
+  }
+}
+```
+
+### Claude Code
+
+```bash
+claude mcp add notion -- npx -y @kresnayulianta/notion-mcp ntn_yourtoken
 ```
 
 ### HTTP server mode
