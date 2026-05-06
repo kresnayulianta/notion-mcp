@@ -18,6 +18,7 @@ import * as comments from "./tools/comments.js";
 import * as blockOperations from "./tools/blockOperations.js";
 import * as databaseOperations from "./tools/databaseOperations.js";
 import * as pageOperations from "./tools/pageOperations.js";
+import * as updatePage from "./tools/updatePage.js";
 
 const server = new McpServer({ name: "notion-mcp-custom", version: "1.0.0" });
 
@@ -38,6 +39,7 @@ comments.register(server);
 blockOperations.register(server);
 databaseOperations.register(server);
 pageOperations.register(server);
+updatePage.register(server);
 
 const transport = new StdioServerTransport();
 await server.connect(transport);

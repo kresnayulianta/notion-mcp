@@ -9,24 +9,29 @@ export function register(server: McpServer): void {
     "Create or update a page in a Notion database target based on a matching property value",
     {
       workspace: z.string().optional().describe("Workspace name (uses default if omitted)"),
-      target: z.string().describe("Target name within the workspace"),
+      target: z.string().optional().describe("Target name within the workspace (use this OR database_id)"),
+      database_id: z.string().optional().describe("Notion database ID — use directly without a named target"),
       match_property: z.string().describe("Property name to match on for the upsert lookup"),
       match_value: z.string().describe("Value to match in the match_property field"),
       properties: z
         .string()
         .describe("Notion properties object as a JSON string (property name -> Notion property value)"),
     },
-    async ({ workspace, target, match_property, match_value, properties }) => {
+    async ({ workspace, target, database_id, match_property, match_value, properties }) => {
       try {
+        if (!target && !database_id) {
+          throw new Error("Either target or database_id must be provided.");
+        }
         const { config: wsConfig } = getWorkspace(workspace);
         const token = getToken(wsConfig);
-        const targetConfig = resolveTarget(wsConfig, target);
 
-        const databaseId = targetConfig.data_source_id ?? targetConfig.database_id;
-        if (!databaseId) {
-          throw new Error(
-            `Target "${target}" has neither data_source_id nor database_id configured.`
-          );
+        let databaseId: string;
+        if (target) {
+          const targetConfig = resolveTarget(wsConfig, target);
+          databaseId = (targetConfig.data_source_id ?? targetConfig.database_id)!;
+          if (!databaseId) throw new Error(`Target "${target}" has neither data_source_id nor database_id configured.`);
+        } else {
+          databaseId = database_id!;
         }
 
         let parsedProperties: Record<string, unknown>;

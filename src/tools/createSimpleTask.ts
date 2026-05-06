@@ -13,25 +13,31 @@ export function register(server: McpServer): void {
     "Create a new page/task in a Notion database target",
     {
       workspace: z.string().optional().describe("Workspace name (uses default if omitted)"),
-      target: z.string().describe("Target name within the workspace"),
+      target: z.string().optional().describe("Target name within the workspace (use this OR database_id)"),
+      database_id: z.string().optional().describe("Notion database ID — use directly without a named target"),
       title: z.string().describe("Title of the task"),
       due_date: z.string().optional().describe("Due date as ISO 8601 date string (e.g. 2024-12-31)"),
       notes: z.string().optional().describe("Notes or description for the task"),
       priority: z.string().optional().describe("Priority level (e.g. High, Medium, Low)"),
       status: z.string().optional().describe("Status value (e.g. Not started, In progress, Done)"),
     },
-    async ({ workspace, target, title, due_date, notes, priority, status }) => {
+    async ({ workspace, target, database_id, title, due_date, notes, priority, status }) => {
       try {
+        if (!target && !database_id) {
+          throw new Error("Either target or database_id must be provided.");
+        }
         const { config: wsConfig } = getWorkspace(workspace);
         const token = getToken(wsConfig);
-        const targetConfig = resolveTarget(wsConfig, target);
-        const aliases = targetConfig.propertyAliases;
 
-        const databaseId = targetConfig.database_id ?? targetConfig.data_source_id;
-        if (!databaseId) {
-          throw new Error(
-            `Target "${target}" has neither database_id nor data_source_id configured.`
-          );
+        let databaseId: string;
+        let aliases: Record<string, string> | undefined;
+        if (target) {
+          const targetConfig = resolveTarget(wsConfig, target);
+          aliases = targetConfig.propertyAliases;
+          databaseId = (targetConfig.database_id ?? targetConfig.data_source_id)!;
+          if (!databaseId) throw new Error(`Target "${target}" has neither database_id nor data_source_id configured.`);
+        } else {
+          databaseId = database_id!;
         }
 
         const properties: Record<string, unknown> = {};

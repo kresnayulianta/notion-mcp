@@ -24,4 +24,25 @@ export function register(server: McpServer): void {
       }
     }
   );
+
+  server.tool(
+    "get-user",
+    "Retrieve a single Notion user by ID. Returns name, email, and avatar.",
+    {
+      user_id: z.string().describe("Notion user ID"),
+      workspace: z.string().optional().describe("Workspace name (uses default if omitted)"),
+    },
+    async ({ user_id, workspace }) => {
+      try {
+        const { config: wsConfig } = getWorkspace(workspace);
+        const token = getToken(wsConfig);
+        const client = new NotionClient(token, getApiVersion());
+        const result = await client.retrieveUser(user_id);
+        return { content: [{ type: "text", text: JSON.stringify(result, null, 2) }] };
+      } catch (err) {
+        const message = err instanceof Error ? err.message : String(err);
+        return { content: [{ type: "text", text: `Error: ${message}` }], isError: true };
+      }
+    }
+  );
 }

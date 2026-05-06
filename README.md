@@ -42,6 +42,7 @@ A custom [Model Context Protocol (MCP)](https://modelcontextprotocol.io) server 
 | Tool | Description |
 |------|-------------|
 | `list-users` | List all workspace users (names, emails, IDs) |
+| `get-user` | Retrieve a single user by ID |
 
 ### Search & Config
 | Tool | Description |
@@ -49,6 +50,7 @@ A custom [Model Context Protocol (MCP)](https://modelcontextprotocol.io) server 
 | `search` | Full-text search across a workspace |
 | `list-workspaces` | List all configured Notion workspaces |
 | `list-targets` | List registered database targets |
+| `resolve-target` | Return full config for a specific workspace + target |
 | `add-target` | Register a database as a named target (persisted to config) |
 | `remove-target` | Remove a named target from config |
 
